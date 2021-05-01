@@ -47,7 +47,14 @@ public class DefaultBookService implements BookService {
     @Override
     public List<Book> findByTitleAndAuthor(String title, String author) {
         BoolQueryBuilder criteria = QueryBuilders.boolQuery();
-        criteria.must().addAll(List.of(QueryBuilders.matchQuery("authorName", author), QueryBuilders.matchQuery("title", title)));
+        criteria.should().addAll(List.of(QueryBuilders.matchQuery("authorName", author), QueryBuilders.matchQuery("title", title)));
+        return elasticsearchTemplate.queryForList(new NativeSearchQueryBuilder().withQuery(criteria).build(), Book.class);
+    }
+
+    @Override
+    public List<Book> boolQueryByAuthor(String author) {
+        BoolQueryBuilder criteria = QueryBuilders.boolQuery();
+        criteria.must().addAll(List.of(QueryBuilders.matchQuery("authorName", author)));
         return elasticsearchTemplate.queryForList(new NativeSearchQueryBuilder().withQuery(criteria).build(), Book.class);
     }
 

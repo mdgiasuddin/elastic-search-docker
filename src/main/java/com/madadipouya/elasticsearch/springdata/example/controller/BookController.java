@@ -1,9 +1,9 @@
 package com.madadipouya.elasticsearch.springdata.example.controller;
 
 import com.madadipouya.elasticsearch.springdata.example.metadata.PublicationYear;
-import com.madadipouya.elasticsearch.springdata.example.service.exception.BookNotFoundException;
 import com.madadipouya.elasticsearch.springdata.example.model.Book;
 import com.madadipouya.elasticsearch.springdata.example.service.BookService;
+import com.madadipouya.elasticsearch.springdata.example.service.exception.BookNotFoundException;
 import com.madadipouya.elasticsearch.springdata.example.service.exception.DuplicateIsbnException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +45,18 @@ public class BookController {
     @GetMapping(value = "/query")
     public List<Book> getBooksByAuthorAndTitle(@RequestParam(value = "title") String title, @RequestParam(value = "author") String author) {
         return bookService.findByTitleAndAuthor(title, author);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/query/author/repo")
+    public List<Book> getBooksByAuthRepo(@RequestParam(value = "author") String author) {
+        return bookService.findByAuthor(author);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/query/author")
+    public List<Book> getBooksByAuth(@RequestParam(value = "author") String author) {
+        return bookService.boolQueryByAuthor(author);
     }
 
     @ResponseStatus(HttpStatus.OK)
